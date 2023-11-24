@@ -1,32 +1,70 @@
 import { createSlice } from '@reduxjs/toolkit';
-import storage from 'redux-persist/lib/storage';
-import persistReducer from 'redux-persist/es/persistReducer';
+import { toast } from 'react-hot-toast';
+import {
+  fetchContacts,
+  fetchAddContacts,
+  fetchDeleteContacts,
+} from './contactsOperations';
+
+const toastLoading = toast.loading('', { position: 'top-right' });
+const onPending = state => {
+  state.isLoading = true;
+  toast.loading('Waiting...', { id: toastLoading, position: 'top-left' });
+};
+
+const onRejected = (state, action) => {
+  state.isLoading = false;
+  state.error = action.payload;
+  toast.dismiss(toastLoading);
+  toast.error(state.error);
+};
+const onFulfilled = (state, action) => {
+  toast.dismiss(toastLoading);
+  state.isLoading = false;
+  state.items = action.payload;
+  state.error = null;
+};
+const onAddFulfilled = (state, action) => {
+  toast.dismiss(toastLoading);
+  toast.success('Contact is added!', {
+    id: toastLoading,
+    position: 'top-right',
+  });
+ 
+  return {
+    ...state,
+    items: [...state.items, action.payload],
+    error: null,
+  };
+};
+const onDeleteFulfilled = (state, action) => {
+  toast.dismiss(toastLoading);
+  toast.success('Contact deleted...', {
+    id: toastLoading,
+    position: 'top-right',
+  });
+  // toast.success('Contact deleted');
+  return {
+    ...state,
+    items: state.items.filter(contact => contact.id !== action.payload.id),
+  };
+};
 
 export const contactsSlice = createSlice({
   name: 'contacts',
-  initialState: { items: [] },
-  reducers: {
-    addContact: (state, action) => {
-      state.items.push(action.payload);
-    },
-    deleteContact: (state, action) => {
-      state.items = state.items.filter(
-        contact => contact.id !== action.payload
-      );
-    },
+  initialState: { items: [], isLoading: false, error: null },
+  extraReducers: builder => {
+    builder
+      .addCase(fetchContacts.pending, onPending)
+      .addCase(fetchContacts.fulfilled, onFulfilled)
+      .addCase(fetchContacts.rejected, onRejected)
+      .addCase(fetchAddContacts.pending, onPending)
+      .addCase(fetchAddContacts.fulfilled, onAddFulfilled)
+      .addCase(fetchAddContacts.rejected, onRejected)
+      .addCase(fetchDeleteContacts.pending, onPending)
+      .addCase(fetchDeleteContacts.fulfilled, onDeleteFulfilled)
+      .addCase(fetchDeleteContacts.rejected, onRejected);
   },
 });
 
 export const getContacts = state => state.contacts.items;
-
-export const persistConfig = {
-  key: 'root',
-  storage,
-  whitelist: ['items'],
-};
-export const persistedContactsReducer = persistReducer(
-  persistConfig,
-  contactsSlice.reducer
-);
-
-export const { addContact, deleteContact } = contactsSlice.actions;

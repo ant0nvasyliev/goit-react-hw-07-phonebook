@@ -1,10 +1,11 @@
 import { Formik, ErrorMessage } from 'formik';
 import { StyledForm, StyledFild, AddButton } from './ContactForm.styled';
 import * as Yup from 'yup';
-import { nanoid } from 'nanoid';
+// import { nanoid } from 'nanoid';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from '../../redux/contactsSlice';
+// import { addContact } from '../../redux/contactsSlice';
 import { getContacts } from '../../redux/contactsSlice';
+import { fetchAddContacts } from '../../redux/contactsOperations';
 
 const schema = Yup.object().shape({
   name: Yup.string()
@@ -30,18 +31,19 @@ export const ContactForm = () => {
         number: '',
       }}
       validationSchema={schema}
-      onSubmit={(values, { resetForm }) => {
-        const enteredName = values.name;
+      onSubmit={(values, actions) => {
+        const checkName = values.name;
+
         if (
           contacts.some(
-            contact => contact.name.toLowerCase() === enteredName.toLowerCase()
+            contact => contact.name.toLowerCase() === checkName.toLowerCase()
           )
         ) {
-          alert(`${enteredName} вже є в каталозі`);
+          alert(`${checkName} already recorded in the directory`);
           return;
         }
-        dispatch(addContact({ id: nanoid(), ...values }));
-        resetForm();
+        dispatch(fetchAddContacts({ ...values }));
+        actions.resetForm();
       }}
     >
       <StyledForm>
