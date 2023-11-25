@@ -2,8 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 import { toast } from 'react-hot-toast';
 import {
   fetchContacts,
-  fetchAddContacts,
-  fetchDeleteContacts,
+  AddContacts,
+  DeleteContacts,
 } from './contactsOperations';
 
 const toastLoading = toast.loading('', { position: 'top-right' });
@@ -30,7 +30,7 @@ const onAddFulfilled = (state, action) => {
     id: toastLoading,
     position: 'top-right',
   });
- 
+
   return {
     ...state,
     items: [...state.items, action.payload],
@@ -58,12 +58,12 @@ export const contactsSlice = createSlice({
       .addCase(fetchContacts.pending, onPending)
       .addCase(fetchContacts.fulfilled, onFulfilled)
       .addCase(fetchContacts.rejected, onRejected)
-      .addCase(fetchAddContacts.pending, onPending)
-      .addCase(fetchAddContacts.fulfilled, onAddFulfilled)
-      .addCase(fetchAddContacts.rejected, onRejected)
-      .addCase(fetchDeleteContacts.pending, onPending)
-      .addCase(fetchDeleteContacts.fulfilled, onDeleteFulfilled)
-      .addCase(fetchDeleteContacts.rejected, onRejected);
+      .addCase(AddContacts.pending, onPending)
+      .addCase(AddContacts.fulfilled, onAddFulfilled)
+      .addCase(AddContacts.rejected, onRejected)
+      .addCase(DeleteContacts.pending, onPending)
+      .addCase(DeleteContacts.fulfilled, onDeleteFulfilled)
+      .addCase(DeleteContacts.rejected, onRejected);
   },
 });
 

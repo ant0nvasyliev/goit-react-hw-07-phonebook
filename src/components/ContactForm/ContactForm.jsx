@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 // import { addContact } from '../../redux/contactsSlice';
 import { getContacts } from '../../redux/contactsSlice';
-import { fetchAddContacts } from '../../redux/contactsOperations';
+import { AddContacts } from '../../redux/contactsOperations';
 
 const schema = Yup.object().shape({
   name: Yup.string()
@@ -42,7 +42,7 @@ export const ContactForm = () => {
           alert(`${checkName} already recorded in the directory`);
           return;
         }
-        dispatch(fetchAddContacts({ ...values }));
+        dispatch(AddContacts({ ...values }));
         actions.resetForm();
       }}
     >

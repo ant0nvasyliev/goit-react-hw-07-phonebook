@@ -5,7 +5,7 @@ import {
 import { MdOutlineDeleteForever } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
 // import { deleteContact } from '../../redux/contactsSlice';
-import { fetchDeleteContacts } from '../../redux/contactsOperations';
+import { DeleteContacts } from '../../redux/contactsOperations';
 
 export const ContactListItem = ({ contact: { name, phone, id } }) => {
   const dispatch = useDispatch();
@@ -16,7 +16,7 @@ export const ContactListItem = ({ contact: { name, phone, id } }) => {
       <StyledDeleteButton
         type="button"
         onClick={() => {
-          dispatch(fetchDeleteContacts(id));
+          dispatch(DeleteContacts(id));
         }}
       >
         <MdOutlineDeleteForever />

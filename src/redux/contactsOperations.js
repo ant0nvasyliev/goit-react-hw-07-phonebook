@@ -14,7 +14,7 @@ export const fetchContacts = createAsyncThunk(
   }
 );
 
-export const fetchAddContacts = createAsyncThunk(
+export const AddContacts = createAsyncThunk(
   'contacts/addContact',
   async ({ name, phone }, thunkAPI) => {
     try {
@@ -26,7 +26,7 @@ export const fetchAddContacts = createAsyncThunk(
   }
 );
 
-export const fetchDeleteContacts = createAsyncThunk(
+export const DeleteContacts = createAsyncThunk(
   'contacts/deleteContact',
   async (id, thunkAPI) => {
     try {
